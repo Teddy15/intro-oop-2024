@@ -1,142 +1,179 @@
 #include <iostream>
-#include <string>
 #include <cstring>
 #include <exception>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
-class Race {
+class Registry {
 protected:
-    char* raceName;
-    double* results;
-    size_t numberOfResults;
-public: 
-    static int numberOfTotalRaces;
+    char* registryName;
+    string* records;
+    size_t numberOfRecords;
+public:
+    static int numberOfActiveRegistries;
 
-    Race() {
-        raceName = new char[1];
-        raceName[0] = '\0';
-        results = new double[1];
-        results[0] = 0.0;
-        numberOfResults = 1;
-
-        numberOfTotalRaces++;
+    Registry() {
+        registryName = new char[2];
+        registryName[0] = ' ';
+        registryName[1] = '\0';
+        records = new string[2];
+        numberOfRecords = 2;
+        numberOfActiveRegistries++;
     }
 
-    Race(const char *raceName, const double *results, size_t numberOfResults) {
-        if (numberOfResults <= 0 || results == nullptr || raceName == nullptr) {
+    Registry(const char *registryName, const string *records, size_t numberOfRecords) {
+        if (numberOfRecords <= 0 || registryName == nullptr || records == nullptr) {
             throw "error";
         }
 
-        this->raceName = new char[strlen(raceName) + 1];
-        strcpy(this->raceName, raceName);
+        this->registryName = new char[strlen(registryName) + 1];
+        strcpy(this->registryName, registryName);
 
-        this->numberOfResults = numberOfResults;
-        this->results = new double[this->numberOfResults];
-        for (int i = 0; i < numberOfResults; i++) {
-            this->results[i] = results[i];
+        this->records = new string[numberOfRecords];
+        for (int i = 0; i < numberOfRecords; i++) {
+            this->records[i] = records[i];
         }
 
-        numberOfTotalRaces++;
+        this->numberOfRecords = numberOfRecords;
+
+        numberOfActiveRegistries;
     }
 
-    Race(const Race &other) : Race(other.raceName, other.results, other.numberOfResults) {}
+    Registry(const Registry &other) : Registry(other.registryName, other.records, other.numberOfRecords) {}
 
-    ~Race() {
-        cout << "in race destructor" << endl;
-        delete [] raceName;
-        delete [] results;
-        numberOfTotalRaces--;
+    ~Registry() {
+        cout << "destructor super" << endl;
+        delete [] registryName;
+        delete [] records;
+        numberOfActiveRegistries--;
     }
 
-    Race &operator=(const Race &other) {
+    Registry &operator=(const Registry &other) {
         if (this != &other) {
-            delete [] raceName;
-            delete [] results;
+            delete [] this->registryName;
+            delete [] this->records;
 
-            this->raceName = new char[strlen(other.raceName) + 1];
-            strcpy(this->raceName, other.raceName);
+            this->registryName = new char[strlen(other.registryName) + 1];
+            strcpy(this->registryName, other.registryName);
 
-            this->numberOfResults = other.numberOfResults;
-            this->results = new double[this->numberOfResults];
-            for (int i = 0; i < other.numberOfResults; i++) {
-                this->results[i] = other.results[i];
+            this->records = new string[other.numberOfRecords];
+            for (int i = 0; i < other.numberOfRecords; i++) {
+                this->records[i] = other.records[i];
             }
+
+            this->numberOfRecords = other.numberOfRecords;
         }
+
         return *this;
     }
 
-    int getTotalRaces () const {
-        return numberOfTotalRaces;
+    static int getActiveRegistries() {
+        return numberOfActiveRegistries;
     }
 
-    void printRaceInformation() const {
-        double averageScore = 0.0;
-        for (int i = 0; i < numberOfResults; i++) {
-            averageScore += results[i];
+    void printRegistryInformation() const {
+        cout << this->registryName << endl;
+        for (int i = 0; i < this->numberOfRecords; i++) {
+            cout << this->records[i] << endl;
         }
-
-        averageScore = averageScore / numberOfResults;
-        cout << getTotalRaces() << " " << raceName << " " << averageScore << endl;
     }
 };
 
-int Race::numberOfTotalRaces = 0;
+int Registry::numberOfActiveRegistries = 0;
 
-class Formula1Race : public Race {
-    string* teams;
-    size_t numberOfTeams;
+class PhoneRegistry : public Registry {
+    string* phoneNumbers;
+    size_t numberOfPhoneNumbers;
 public:
-    Formula1Race(const char *raceName, const double *results, size_t numberOfResults, const string *teams, size_t numberOfTeams) 
-    : Race(raceName, results, numberOfResults) {
-        if (numberOfTeams <= 0 || teams == nullptr) {
+    PhoneRegistry(const char *registryName, const string *records, size_t numberOfRecords, const string *phoneNumbers, size_t numberOfPhoneNumbers) 
+    : Registry (registryName, records, numberOfRecords) {
+        if (phoneNumbers == nullptr || numberOfPhoneNumbers <= 0) {
             throw "error";
         }
 
-        this->numberOfTeams = numberOfTeams;
-        this->teams = new string[numberOfTeams];
-        for (int i = 0; i < numberOfTeams; i++) {
-            this->teams[i] = teams[i];
+        this->numberOfPhoneNumbers = numberOfPhoneNumbers;
+        this->phoneNumbers = new string[numberOfPhoneNumbers];
+        for (int i = 0; i < numberOfPhoneNumbers; i++) {
+            this->phoneNumbers[i] = phoneNumbers[i];
         }
     }
 
-    Formula1Race(const Formula1Race &other) 
-    : Formula1Race(other.raceName, other.results, other.numberOfResults, other.teams, other.numberOfTeams) {}
+    PhoneRegistry(const PhoneRegistry &other) 
+    : PhoneRegistry(other.registryName, other.records, other.numberOfRecords, other.phoneNumbers, other.numberOfPhoneNumbers) {}
 
-    ~Formula1Race() {
-        cout << "in f1 destructor" << endl;
-        delete [] teams;
+    ~PhoneRegistry() {
+        cout << "destructor" << endl;
+        delete [] phoneNumbers;
     }
 
-    Formula1Race &operator=(const Formula1Race &other) {
+    PhoneRegistry &operator=(const PhoneRegistry &other) {
         if (this != &other) {
-            Race::operator=(other);
-            delete [] teams;
-
-            this->numberOfTeams = other.numberOfTeams;
-            this->teams = new string[other.numberOfTeams];
-            for (int i = 0; i < other.numberOfTeams; i++) {
-                this->teams[i] = other.teams[i];
+            Registry::operator=(other);
+            
+            delete [] phoneNumbers;
+            
+            this->numberOfPhoneNumbers = other.numberOfPhoneNumbers;
+            this->phoneNumbers = new string[this->numberOfPhoneNumbers];
+            for (int i = 0; i < this->numberOfPhoneNumbers; i++) {
+                this->phoneNumbers[i] = other.phoneNumbers[i];
             }
         }
 
         return *this;
     }
 
-    void printRaceInformation() const {
-        Race::printRaceInformation();
-        for (int i = 0; i < numberOfTeams; i++) {
-            cout << teams[i] << endl;
+    void printRegistryInformation() const {
+        cout << this->registryName << endl;
+        for (int i = 0; i < this->numberOfRecords; i++) {
+            cout << this->records[i];
+            if (i >= numberOfPhoneNumbers) {
+                cout << " - ";
+            } else {
+                cout << " " << this->phoneNumbers[i];
+            }
+            cout << endl;
         }
     }
 };
 
 int main() {
-    double* results = new double[2]{2.5, 3.4};
-    string* teams = new string[2]{"team1", "team2"};
+    string* records = new string[2];
+    records[0] =  "record1";
+    records[1] = "record2";
+    string* phoneNumbers = new string[1];
+    phoneNumbers[0] = "00000";
+    PhoneRegistry p("name", records, 2, phoneNumbers, 1);
+    p.printRegistryInformation();
 
-    Formula1Race f("race name", results, 2, teams, 2);
-    f.printRaceInformation();
-    f.getTotalRaces();
+    int a = 10;
+    stringstream s;
+    s << a; // this will get the integer 10 and keep it as string in the stream
+
+    string b;
+    s >> b;
+
+    cout << a << " " << b << endl;
+
+    string line = "What a good day not to check homeworks!";
+    stringstream ss(line);
+    string word;
+    
+    while (ss >> word) {
+        cout << word << endl;
+    }
+
+    getline(cin, word);
+    cout << word << endl;
+
+
+    while(1) {
+        getline(cin, word);
+        if (word == "q") {
+            break;
+        }
+        cout << word << endl;
+    }
     return 0;
 }

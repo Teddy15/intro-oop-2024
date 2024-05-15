@@ -2,6 +2,7 @@
 #include <cstring>
 #include <exception>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -145,5 +146,34 @@ int main() {
     phoneNumbers[0] = "00000";
     PhoneRegistry p("name", records, 2, phoneNumbers, 1);
     p.printRegistryInformation();
+
+    int a = 10;
+    stringstream s;
+    s << a; // this will get the integer 10 and keep it as string in the stream
+
+    string b;
+    s >> b;
+
+    cout << a << " " << b << endl;
+
+    string line = "What a good day not to check homeworks!";
+    stringstream ss(line);
+    string word;
+    
+    while (ss >> word) {
+        cout << word << endl;
+    }
+
+    getline(cin, word);
+    cout << word << endl;
+
+
+    while(1) {
+        getline(cin, word);
+        if (word == "q") {
+            break;
+        }
+        cout << word << endl;
+    }
     return 0;
 }
