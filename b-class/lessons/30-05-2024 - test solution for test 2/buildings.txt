@@ -1,0 +1,11 @@
+12
+House
+Simeonovo 41
+3
+George 1 55
+John 3 105
+Michael 0 40
+Office
+G.M. Dimitrov
+1
+Will 10 200
